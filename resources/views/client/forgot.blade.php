@@ -35,10 +35,10 @@
                                             alt="" width="60%">
                                     </div>
 
-                                    <!-- Email input -->
+                                    <!-- Email or phone input -->
                                     <div class="form-floating mb-4">
-                                        <input type="email" id="loginEmail" class="form-control" placeholder="" />
-                                        <label class="form-label" for="loginEmail">@lang('auth.form.email')*</label>
+                                        <input type="text" id="forgotLogin" class="form-control" placeholder="" />
+                                        <label class="form-label" for="forgotLogin">@lang('auth.form.email-or-phone')*</label>
                                     </div>
 
                                     <!-- Checkbox

@@ -25,20 +25,23 @@ class UserController extends Controller
     }
 
     public function login(Request $request) {
+        $login = $request->input('login');
+        $email = $request->input('email');
+        $phone = $request->input('phone');
+        $identifier = $login ?? $email ?? $phone;
+
         $validator = Validator::make($request->all(), [
-            'login' => ['required'],
             'password' => ['required'],
         ]);
 
-        if($validator->fails()) {
+        if(!$identifier || $validator->fails()) {
             return ResponseFactory::response(422, "Dữ liệu không hợp lệ", $validator->errors());
         }
         
-        $login = $request->input('login');
         $password = $request->input('password');
-        $isEmail = filter_var($login, FILTER_VALIDATE_EMAIL) !== false;
+        $isEmail = filter_var($identifier, FILTER_VALIDATE_EMAIL) !== false;
         $credentials = [
-            $isEmail ? 'email' : 'phone' => $login,
+            $isEmail ? 'email' : 'phone' => $identifier,
             'password' => $password,
         ];
 
@@ -108,10 +111,24 @@ class UserController extends Controller
     }
 
     public function forgotPassword(Request $request) {
-        $email = $request->email;
+        $login = $request->input('login');
+        $email = $request->input('email');
+        $phone = $request->input('phone');
+        $identifier = $login ?? $email ?? $phone;
         $locale = $request->locale;
         app()->setLocale($locale);
-        $user = User::where('email', $email)->first();
+
+        if(!$identifier) {
+            return response()->json([
+                'message' => 'Email không tồn tại',
+            ], 404);
+        }
+
+        $isEmail = filter_var($identifier, FILTER_VALIDATE_EMAIL) !== false;
+        $user = $isEmail
+            ? User::where('email', $identifier)->first()
+            : User::where('phone', $identifier)->first();
+
         if($user == null) {
             return response()->json([
                 'message' => 'Email không tồn tại',
@@ -120,9 +137,9 @@ class UserController extends Controller
 
         $token = Hash::make($user->email . $user->id . $user->password . Carbon::now());
         // Store to password_resets table
-        DB::table('password_resets')->where('email', $email)->delete();
+        DB::table('password_resets')->where('email', $user->email)->delete();
         $inserted = DB::table('password_resets')->insert([
-            'email' => $email,
+            'email' => $user->email,
             'token' => $token,
             'created_at' => Carbon::now(),
         ]);
@@ -130,7 +147,7 @@ class UserController extends Controller
         if($inserted) {
             // Send mail
             $mail = new ResetPasswordMail(__('form.reset-password'), $token);
-            Mail::to($email)->send($mail);
+            Mail::to($user->email)->send($mail);
             return response()->json([
                 'message' => __('mail.notification'),
             ], 200);

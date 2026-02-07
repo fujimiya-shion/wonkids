@@ -159,13 +159,13 @@ class Authentication {
     }
 
     forgotPasswordHandler() {
-        this.email = document.querySelector('input[type="email"]');
+        this.loginField = document.getElementById('forgotLogin');
         const validation = this.validate([
-            this.isEmail(),
+            this.isLoginField(this.loginField),
         ]);
         if(validation) {
             const formData = new FormData();
-            formData.append('email', this.email.value);
+            formData.append('login', this.loginField.value);
             formData.append('locale', document.querySelector('html').getAttribute('lang'));
             const url = '/api/v1/forgot-password';
             fetch(url, {
