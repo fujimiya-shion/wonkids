@@ -11,6 +11,7 @@ return [
     'form.church' => '교회',
     'form.year-of-birth' => '출생 연도',
     'form.email' => 'Email',
+    'form.email-or-phone' => '이메일 또는 전화번호',
     'form.password' => '비밀번호',
     'form.password-confirmation' => '비밀번호 확인',
     'form.still-not-have-account' => '아직 계정이 없으신가요?',

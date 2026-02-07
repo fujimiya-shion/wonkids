@@ -28,6 +28,7 @@ return [
     'form.church' => 'Hội thánh',
     'form.year-of-birth' => 'Năm sinh',
     'form.email' => 'Địa chỉ email',
+    'form.email-or-phone' => 'Email hoặc số điện thoại',
     'form.password' => 'Mật khẩu',
     'form.password-confirmation' => 'Nhập lại mật khẩu',
     'form.already-have-account' => 'Bạn đã có tài khoản?',

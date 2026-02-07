@@ -34,10 +34,10 @@
                                                 alt="" width="60%">
                                         </div>
 
-                                        <!-- Email input -->
+                                        <!-- Login input -->
                                         <div class="form-floating mb-4">
-                                            <input type="email" id="loginEmail" class="form-control" placeholder="" />
-                                            <label class="form-label" for="loginEmail">@lang('auth.form.email')*</label>
+                                            <input type="text" id="loginField" class="form-control" placeholder="" />
+                                            <label class="form-label" for="loginField">@lang('auth.form.email-or-phone')*</label>
                                         </div>
 
                                         <!-- Password input -->

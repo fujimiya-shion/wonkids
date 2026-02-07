@@ -26,7 +26,7 @@ class UserController extends Controller
 
     public function login(Request $request) {
         $validator = Validator::make($request->all(), [
-            'email' => ['required', 'email'],
+            'login' => ['required'],
             'password' => ['required'],
         ]);
 
@@ -34,7 +34,14 @@ class UserController extends Controller
             return ResponseFactory::response(422, "Dữ liệu không hợp lệ", $validator->errors());
         }
         
-        $credentials = request(['email', 'password']);
+        $login = $request->input('login');
+        $password = $request->input('password');
+        $isEmail = filter_var($login, FILTER_VALIDATE_EMAIL) !== false;
+        $credentials = [
+            $isEmail ? 'email' : 'phone' => $login,
+            'password' => $password,
+        ];
+
         if(Auth::attempt($credentials)) {
             $user = Auth::user();
             $token = $user->createToken('wonkidsclub')->accessToken;

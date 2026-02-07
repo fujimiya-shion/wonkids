@@ -1,7 +1,9 @@
 class Authentication {
     constructor() {
-        this.email = document.querySelector('input[type="email"]');
+        this.email = null;
         this.password = document.querySelector('input[type="password"]');
+        this.phone = null;
+        this.loginField = null;
         this.sumbitBtn = document.querySelector('button[type="submit"]');
         this.locale = document.querySelector('html').getAttribute('lang');
         this.language = new Language(this.locale);
@@ -97,19 +99,19 @@ class Authentication {
     }
 
     loginSubmitHandler() {
-        this.email = document.querySelector('input[type="email"]');
+        this.loginField = document.getElementById('loginField');
         this.password = document.querySelector('input[type="password"]');
         const validation = this.validate([
-            this.isEmail(),
+            this.isLoginField(this.loginField),
             this.isPassword(),
         ]);
 
         if (validation) {
             const formData = new FormData();
-            const email = this.email.value;
+            const login = this.loginField.value;
             const password = this.password.value;
             const url = '/api/v1/login';
-            formData.append('email', email);
+            formData.append('login', login);
             formData.append('password', password);
             fetch(url, {
                 method: 'POST',
@@ -296,6 +298,31 @@ class Authentication {
         if (this.isNumber(phone.value))
             return this.successField(phone);
         return this.errorField(phone, this.language.trans('phoneMustnotContainSpecialCharacter'));
+    }
+
+    /**
+     * 
+     * @param {HTMLInputElement} phone 
+     * @return {object}
+     */
+    isPhoneRequired(phone) {
+        if (!phone.value) return this.errorField(phone, this.language.trans('phoneNotEntered'));
+        if (this.isNumber(phone.value))
+            return this.successField(phone);
+        return this.errorField(phone, this.language.trans('phoneMustnotContainSpecialCharacter'));
+    }
+
+    /**
+     * @param {HTMLInputElement} field
+     * @return {object}
+     */
+    isLoginField(field) {
+        if (!field.value) return this.errorField(field, this.language.trans('loginNotEntered'));
+        const value = field.value.trim();
+        const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+        if (emailRegex.test(value)) return this.successField(field);
+        if (this.isNumber(value)) return this.successField(field);
+        return this.errorField(field, this.language.trans('loginNotValid'));
     }
 
     /**

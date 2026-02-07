@@ -28,6 +28,7 @@ return [
     'form.church' => 'Church',
     'form.year-of-birth' => 'Year of birth',
     'form.email' => 'Email',
+    'form.email-or-phone' => 'Email or phone number',
     'form.password' => 'Password',
     'form.password-confirmation' => 'Re-enter the password',
     'form.already-have-account' => 'Already have an account?',
